@@ -1,9 +1,5 @@
 #  👋 Introduction
   Hello, and welcome! My name is Sorin, and I'm a Python Developer, Freelancer, Programming Tutor, Web Developer, and C++ Developer. With over 3 years of experience in the industry, I have a proven track record of delivering high-quality software solutions that meet the needs of my clients.
-
-  As a Python Developer, I specialize in developing web applications, data analysis tools, and automation scripts using various Python libraries and frameworks. As a Freelancer, I work with clients from various industries, providing custom software development, project management, and consulting services.
-
-  In addition to my work as a Python Developer and Freelancer, I also serve as a Programming Tutor at SmartCurs.ro, where I help students learn programming fundamentals, best practices, and advanced techniques. As a Web Developer, I have a strong background in HTML, CSS, JavaScript, and various web frameworks, such as Django and Flask. As a C++ Developer, I have participated in multiple national and regional Informatics Olympiads and have a solid understanding of algorithms, data structures, and software design principles.
 #### 📫 How to reach me: 
 - Email: <a href="mailto:sorinbetisor1@gmail.com">sorinbetisor1@gmail.com</a>
 - LinkedIn: <a href="https://www.linkedin.com/in/sorin-be%C8%9Bi%C8%99or-722188244/">Sorin Bețișor</a>
