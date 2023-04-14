@@ -9,7 +9,7 @@
 #### 🏆 Achievements:
 - TekWill Junior Ambassadors Web Developing Competition Finalist 🏅
 - Cisco Academy - IT Essentials Student Grade A+ 🎓
-- 10,000+ students on Udemy and SmartCurs for my JavaScript /Python /Web Developing / General Programming courses 🎥
+- 10,000+ students on Udemy and SmartCurs on my JavaScript / Python / Web Developing / General Programming courses 🎥
 - HackerRank - Expert Python Problem Solving 🐍
 - Multiple National / Regional Informatics Olympiads (C++ / Python) 🥇
 
