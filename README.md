@@ -1,6 +1,6 @@
-<a href="https://github.com/YOUR_USERNAME/YOUR_USERNAME">
+<a href="https://github.com/SorinBetisor/SorinBetisor">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/main/dark_mode.svg">
-    <img alt="Your Name's GitHub Profile README" src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/main/light_mode.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/SorinBetisor/SorinBetisor/main/dark_mode.svg">
+    <img alt="Sorin Betisor's GitHub Profile README" src="https://raw.githubusercontent.com/SorinBetisor/SorinBetisor/main/light_mode.svg">
   </picture>
 </a>
