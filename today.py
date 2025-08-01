@@ -10,8 +10,8 @@ import hashlib
 # Account permissions: read:Followers, read:Starring, read:Watching
 # Repository permissions: read:Commit statuses, read:Contents, read:Issues, read:Metadata, read:Pull Requests
 # Issues and pull requests permissions not needed at the moment, but may be used in the future
-HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
-USER_NAME = os.environ['USER_NAME'] # 'Andrew6rant'
+HEADERS = {'authorization': 'token ' + os.environ['ACCESS_TOKEN']}
+USER_NAME = os.environ['SorinBetisor']  # Your GitHub username
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -22,8 +22,8 @@ def daily_readme(birthday):
     """
     diff = relativedelta.relativedelta(datetime.datetime.today(), birthday)
     return '{} {}, {} {}, {} {}{}'.format(
-        diff.years, 'year' + format_plural(diff.years), 
-        diff.months, 'month' + format_plural(diff.months), 
+        diff.years, 'year' + format_plural(diff.years),
+        diff.months, 'month' + format_plural(diff.months),
         diff.days, 'day' + format_plural(diff.days),
         ' 🎂' if (diff.months == 0 and diff.days == 0) else '')
 
@@ -65,7 +65,7 @@ def graph_commits(start_date, end_date):
             }
         }
     }'''
-    variables = {'start_date': start_date,'end_date': end_date, 'login': USER_NAME}
+    variables = {'start_date': start_date, 'end_date': end_date, 'login': USER_NAME}
     request = simple_request(graph_commits.__name__, query, variables)
     return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
 
@@ -144,11 +144,12 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
         }
     }'''
     variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS) # I cannot use simple_request(), because I want to save the file before raising Exception
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables}, headers=HEADERS)  # I cannot use simple_request(), because I want to save the file before raising Exception
     if request.status_code == 200:
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total, my_commits)
-        else: return 0
+        else:
+            return 0
     force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
     if request.status_code == 403:
         raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
@@ -168,7 +169,8 @@ def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, additio
 
     if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
         return addition_total, deletion_total, my_commits
-    else: return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, my_commits, history['pageInfo']['endCursor'])
+    else:
+        return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, my_commits, history['pageInfo']['endCursor'])
 
 
 def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]):
@@ -208,8 +210,8 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
     request = simple_request(loc_query.__name__, query, variables)
-    if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:   # If repository data has another page
-        edges += request.json()['data']['user']['repositories']['edges']            # Add on to the LoC count
+    if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:  # If repository data has another page
+        edges += request.json()['data']['user']['repositories']['edges']  # Add on to the LoC count
         return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
     else:
         return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
@@ -220,19 +222,20 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     Checks each repository in edges to see if it has been updated since the last time it was cached
     If it has, run recursive_loc on that repository to update the LOC count
     """
-    cached = True # Assume all repositories are cached
-    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt' # Create a unique filename for each user
+    cached = True  # Assume all repositories are cached
+    filename = 'cache/' + hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest() + '.txt'  # Create a unique filename for each user
     try:
         with open(filename, 'r') as f:
             data = f.readlines()
-    except FileNotFoundError: # If the cache file doesn't exist, create it
+    except FileNotFoundError:  # If the cache file doesn't exist, create it
         data = []
         if comment_size > 0:
-            for _ in range(comment_size): data.append('This line is a comment block. Write whatever you want here.\n')
+            for _ in range(comment_size):
+                data.append('This line is a comment block. Write whatever you want here.\n')
         with open(filename, 'w') as f:
             f.writelines(data)
 
-    if len(data)-comment_size != len(edges) or force_cache: # If the number of repos has changed, or force_cache is True
+    if len(data) - comment_size != len(edges) or force_cache:  # If the number of repos has changed, or force_cache is True
         cached = False
         flush_cache(edges, filename, comment_size)
         with open(filename, 'r') as f:
@@ -249,7 +252,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                     owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
                     loc = recursive_loc(owner, repo_name, data, cache_comment)
                     data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
-            except TypeError: # If the repo is empty
+            except TypeError:  # If the repo is empty
                 data[index] = repo_hash + ' 0 0 0 0\n'
     with open(filename, 'w') as f:
         f.writelines(cache_comment)
