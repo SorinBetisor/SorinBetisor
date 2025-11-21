@@ -261,7 +261,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
         loc = line.split()
         loc_add += int(loc[3])
         loc_del += int(loc[4])
-    return [loc_add, loc_del, loc_add - loc_del, cached]
+    return [loc_add, loc_del, loc_add + loc_del, cached]
 
 
 def flush_cache(edges, filename, comment_size):
@@ -296,7 +296,7 @@ def add_archive():
         deleted_loc += int(loc[1])
         if (my_commits.isdigit()): added_commits += int(my_commits)
     added_commits += int(old_data[-1].split()[4][:-1])
-    return [added_loc, deleted_loc, added_loc - deleted_loc, added_commits, contributed_repos]
+    return [added_loc, deleted_loc, added_loc + deleted_loc, added_commits, contributed_repos]
 
 def force_close_file(data, cache_comment):
     """
